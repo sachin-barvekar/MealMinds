@@ -1,12 +1,22 @@
-import './App.css'
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Navbar from './components/Navbar';
+import MealPlan from './pages/MealPlan';
+import MealSearch from './pages/MealSearch';
+import Footer from './components/Footer';
+import './index.css'
 
-function App() {
+const App = () => {
+    return (
+        <Router>
+            <Navbar />
+            <Routes>
+                <Route path="/" element={<MealPlan />} />
+                <Route path="/meal-search" element={<MealSearch />} />
+            </Routes>
+            <Footer/>
+        </Router>
+    );
+};
 
-  return (
-    <>
-     <h1>App</h1>
-    </>
-  )
-}
-
-export default App
+export default App;

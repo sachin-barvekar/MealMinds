@@ -1,0 +1,45 @@
+#hero-section{
+    background-image: url('../assets/header.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 40vh;
+    width: 100%;
+}
+#hero-text{
+    text-align: center;
+}
+h1{
+   color: white;
+   font-weight: 800;
+} 
+
+#search-bar {
+    margin-top: 15px;
+}
+
+#search-bar input {
+    width: 20%;
+    padding: 10px;
+    height: 30px;
+    border: 1px solid white;
+    border-radius: 20px;
+    background-color: transparent;
+    margin-left: auto;
+    color: white;
+}
+#search-bar input:focus {
+    outline: none;
+}
+
+#search-bar button{
+    color: white;
+    background-color: transparent;
+    margin-top: 10px;
+    padding: 5px 10px;
+    border: 1px solid white;
+    height: 30px;
+    border-radius: 10px;
+}
+#search-bar button:hover{
+    background-color: rgb(172, 162, 162);
+}

@@ -1,0 +1,16 @@
+nav{
+    background-color: white;
+}
+#hero-text{
+    position: relative;
+    top: 20%;
+}
+.navbar-brand {
+    color: rgb(16, 203, 16);
+    font-weight: 800;
+    font-size: 1.5rem;
+    padding-left: 20px;
+}
+.navbar-brand:hover{
+    color: rgb(55, 232, 55);
+}

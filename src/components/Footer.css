@@ -1,0 +1,30 @@
+.footer {
+    padding: 20px 0;
+    background-size: cover;
+    background-position: center;
+    background-image: url('../assets/m3_processed.jpg'); /* Make sure to replace with the actual path to your image */
+    background-repeat: no-repeat;
+}
+
+.footer-content {
+    padding: 20px;
+}
+
+.text-primary {
+    color: #ffffff; /* Adjust color based on your preference */
+}
+
+.text-primary-bold {
+    font-weight: bold;
+    color: #ffffff; /* Adjust color based on your preference */
+}
+
+@media (max-width: 767.98px) {
+    .footer-content h2, .footer-content h1 {
+        font-size: 1.5rem; /* Adjust font size for smaller screens */
+    }
+
+    .footer-content p {
+        font-size: 1rem; /* Adjust font size for smaller screens */
+    }
+}
