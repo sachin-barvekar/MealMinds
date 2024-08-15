@@ -4,7 +4,6 @@ import { dirname } from 'path';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dbConnect from "./config/database.js";
-import cloudinaryConnect from './config/cloudinary.js';
 import userRoutes from "./routes/user.js";
 import cors from "cors";
 import cookieParser from "cookie-parser";
@@ -42,8 +41,6 @@ app.listen(PORT, () => {
 });
 
 dbConnect();
-cloudinaryConnect();
-
 
 //render client for any path
 app.get('*', (req, res)=>res.sendFile(path.join(__dirname,'client', 'dist', 'index.html')));
