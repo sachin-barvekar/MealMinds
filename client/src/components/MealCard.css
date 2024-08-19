@@ -1,0 +1,88 @@
+.meal-card {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    margin: 15px;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    width: 28%;
+  }
+  
+  .meal-card h3 {
+    font-size: 18px;
+    color: #666;
+    margin: 0 0 10px 0;
+  }
+  
+  .meal-card h4 {
+    font-size: 14px;
+    color: #666;
+    margin: 0 0 10px 0;
+  }
+  
+  .meal-card img {
+    height: 100px;
+    width: 120px;
+    padding-right: 15px;
+  }
+  
+  .meal-info p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+  }
+  
+  .meal-info .calories {
+    font-size: 30px;
+    font-weight: bold;
+    color: #333;
+  }
+
+  .meal-info .nutrient-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+  }
+  
+  .meal-info .nutrient-item p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .meal-info .nutrient-item .label {
+    display: flex;
+    align-items: center;
+  }
+  
+  .meal-info .nutrient-item .label::before {
+    content: '';
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+  }
+  
+  .nutrient-item.protein .label::before {
+    background-color: #4caf50;
+  }
+  
+  .meal-info .nutrient-item.fat .label::before {
+    background-color: #ffa000;
+  }
+  
+  .nutrient-item.carb .label::before {
+    background-color: #f44336;
+  }
+
+  @media screen and (max-width: 768px) {
+    .meal-card{
+      width: 100%;
+    }
+    .meal-main{
+      justify-content: space-around;
+    }
+}

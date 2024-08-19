@@ -1,0 +1,13 @@
+.profile{
+        width: 100%;
+        margin: 10px;
+        padding: 0.7rem;
+        background-color: #DDD4C8;
+        border-radius: 10px;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+}
+@media screen and (max-width: 768px) {
+    .profile-card .card-body{
+        width: 100%;
+    }
+}

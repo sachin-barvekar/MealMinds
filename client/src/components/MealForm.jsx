@@ -1,79 +1,63 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import _ from "lodash"; // To use debounce for API calls
+import _ from "lodash";
+import HeroSection from "./HeroSection";
 
 const MealForm = () => {
-  const [breakfastOptions, setBreakfastOptions] = useState([]);
-  const [lunchOptions, setLunchOptions] = useState([]);
-  const [dinnerOptions, setDinnerOptions] = useState([]);
-
-  const [searchResults, setSearchResults] = useState([]); // For auto-populate search results
-
   const [selectedMeals, setSelectedMeals] = useState({
     breakfast: "",
     lunch: "",
     dinner: "",
   });
 
+  const [searchResults, setSearchResults] = useState({
+    breakfast: [],
+    lunch: [],
+    dinner: [],
+  }); // Separate search results for each meal type
+
   const [isSubmitted, setIsSubmitted] = useState(false);
-  const [currentDay, setCurrentDay] = useState(1); // Track the current day
+  const [currentDay, setCurrentDay] = useState(1);
 
-  // API keys and URLs (replace with your own keys)
-  const API_URL = "https://trackapi.nutritionix.com/v2/search/instant";
-  const API_KEY = "c856625bb3a757b996c117ae6ab86639";
-  const API_ID = "dfae88fc";
+  const API_URL = import.meta.env.VITE_REACT_APP_API_LINK;
+  const API_KEY = import.meta.env.VITE_REACT_APP_API_KEY;
+  const API_ID = import.meta.env.VITE_REACT_APP_API_ID;
 
-  // Fetch meal options based on the query
-  const fetchMealOptions = async (query) => {
-    try {
-      const response = await axios.get(API_URL, {
-        headers: {
-          "x-app-id": API_ID,
-          "x-app-key": API_KEY,
-        },
-        params: {
-          query: query,
-        },
-      });
-      return response.data.common;
-    } catch (error) {
-      console.error("Error fetching meal options:", error);
-      return [];
-    }
-  };
-
-  // Fetch breakfast, lunch, and dinner options on component mount (initial load)
-  useEffect(() => {
-    const fetchData = async () => {
-      const breakfastData = await fetchMealOptions("eggs, pancakes, oatmeal");
-      const lunchData = await fetchMealOptions("sandwich, salad, burger");
-      const dinnerData = await fetchMealOptions("steak, pasta, chicken");
-
-      setBreakfastOptions(breakfastData);
-      setLunchOptions(lunchData);
-      setDinnerOptions(dinnerData);
-    };
-    fetchData();
-  }, []);
-
-  // Debounced search to limit API calls
-  const debouncedSearch = _.debounce(async (query) => {
+  // Debounced search to limit API call
+  const debouncedSearch = _.debounce(async (mealType, query) => {
     if (query.length > 2) { // Only search when query is at least 3 characters
-      const results = await fetchMealOptions(query);
-      setSearchResults(results);
+      try {
+        const response = await axios.get(API_URL, {
+          headers: {
+            "x-app-id": API_ID,
+            "x-app-key": API_KEY,
+          },
+          params: { query: query },
+        });
+        setSearchResults((prevResults) => ({
+          ...prevResults,
+          [mealType]: response.data.common, // Set the search results for the specific meal type
+        }));
+      } catch (error) {
+        console.error("Error fetching meal options:", error);
+      }
     } else {
-      setSearchResults([]);
+      setSearchResults((prevResults) => ({
+        ...prevResults,
+        [mealType]: [],
+      }));
     }
   }, 500);
 
-  // Handle input change for search
-  const handleSearchChange = (mealType, value) => {
+  // Handle input change for each meal type (breakfast, lunch, dinner)
+  const handleInputChange = (mealType, value) => {
     setSelectedMeals((prevMeals) => ({
       ...prevMeals,
       [mealType]: value,
     }));
 
-    debouncedSearch(value); // Trigger debounced search
+    // Trigger debounced search when user types
+    debouncedSearch(mealType, value);
   };
 
   // Handle meal selection from search results
@@ -82,23 +66,41 @@ const MealForm = () => {
       ...prevMeals,
       [mealType]: mealName,
     }));
-    setSearchResults([]); // Clear search results after selection
+    setSearchResults((prevResults) => ({
+      ...prevResults,
+      [mealType]: [], // Clear search results after selection
+    }));
   };
 
   // Handle form submission
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log("Selected meals:", selectedMeals);
-    setIsSubmitted(true);
 
-    // Increment the day counter when the form is submitted
-    setCurrentDay((prevDay) => prevDay + 1);
+    // Prepare meal data with only meal title, day, and meal type
+    const mealData = {
+      day: currentDay,
+      meals: {
+        breakfast: selectedMeals.breakfast,
+        lunch: selectedMeals.lunch,
+        dinner: selectedMeals.dinner,
+      },
+    };
+
+    // Send the meal data to your backend for saving
+    try {
+      const res = await axios.post("/api/v1/meal-plan/create", mealData);
+      setIsSubmitted(true);
+      setCurrentDay((prevDay) => prevDay + 1); // Increment day
+    } catch (error) {
+      console.error("Error saving meal plan:", error);
+    }
   };
 
   return (
+    <>
+    <HeroSection title="Create Meal Plan"/>
     <div className="container my-5">
-      <h1 className="text-center mb-4">Select Your Meals</h1>
-      <h3 className="text-center">Day {currentDay}</h3> {/* Display current day */}
+      <h3 className="text-center text-muted">Day {currentDay}</h3> {/* Display current day */}
       {!isSubmitted ? (
         <form onSubmit={handleSubmit}>
           {/* Breakfast Section */}
@@ -109,19 +111,19 @@ const MealForm = () => {
               className="form-control"
               placeholder="Search breakfast meal..."
               value={selectedMeals.breakfast}
-              onChange={(e) => handleSearchChange("breakfast", e.target.value)}
+              onChange={(e) => handleInputChange("breakfast", e.target.value)}
               required
             />
-            {searchResults.length > 0 && (
+            {searchResults.breakfast.length > 0 && (
               <ul className="list-group">
-                {searchResults.map((item) => (
+                {searchResults.breakfast.map((item) => (
                   <li
                     key={item.food_name}
                     className="list-group-item"
                     onClick={() => handleMealSelect("breakfast", item.food_name)}
                     style={{ cursor: "pointer" }}
                   >
-                    {item.food_name} - {item.nf_calories} calories
+                    {item.food_name}
                   </li>
                 ))}
               </ul>
@@ -136,19 +138,19 @@ const MealForm = () => {
               className="form-control"
               placeholder="Search lunch meal..."
               value={selectedMeals.lunch}
-              onChange={(e) => handleSearchChange("lunch", e.target.value)}
+              onChange={(e) => handleInputChange("lunch", e.target.value)}
               required
             />
-            {searchResults.length > 0 && (
+            {searchResults.lunch.length > 0 && (
               <ul className="list-group">
-                {searchResults.map((item) => (
+                {searchResults.lunch.map((item) => (
                   <li
                     key={item.food_name}
                     className="list-group-item"
                     onClick={() => handleMealSelect("lunch", item.food_name)}
                     style={{ cursor: "pointer" }}
                   >
-                    {item.food_name} - {item.nf_calories} calories
+                    {item.food_name}
                   </li>
                 ))}
               </ul>
@@ -163,37 +165,37 @@ const MealForm = () => {
               className="form-control"
               placeholder="Search dinner meal..."
               value={selectedMeals.dinner}
-              onChange={(e) => handleSearchChange("dinner", e.target.value)}
+              onChange={(e) => handleInputChange("dinner", e.target.value)}
               required
             />
-            {searchResults.length > 0 && (
+            {searchResults.dinner.length > 0 && (
               <ul className="list-group">
-                {searchResults.map((item) => (
+                {searchResults.dinner.map((item) => (
                   <li
                     key={item.food_name}
                     className="list-group-item"
                     onClick={() => handleMealSelect("dinner", item.food_name)}
                     style={{ cursor: "pointer" }}
                   >
-                    {item.food_name} - {item.nf_calories} calories
+                    {item.food_name}
                   </li>
                 ))}
               </ul>
             )}
           </div>
 
-          <button type="submit" className="btn btn-primary w-100">
+          <button type="submit" className="btn btn-success w-100">
             Submit
           </button>
         </form>
       ) : (
         <div className="text-center">
-          <h2>Meals Submitted Successfully for Day {currentDay - 1}!</h2>
-          <p><strong>Breakfast</strong>: {selectedMeals.breakfast}</p>
-          <p><strong>Lunch</strong>: {selectedMeals.lunch}</p>
-          <p><strong>Dinner</strong>: {selectedMeals.dinner}</p>
+          <h2 className="text-muted">Meals Submitted Successfully for Day {currentDay - 1}!</h2>
+          <p className="text-muted"><strong>Breakfast</strong>: {selectedMeals.breakfast}</p>
+          <p className="text-muted"><strong>Lunch</strong>: {selectedMeals.lunch}</p>
+          <p className="text-muted"><strong>Dinner</strong>: {selectedMeals.dinner}</p>
           <button
-            className="btn btn-secondary mt-3"
+            className="btn btn-success mt-3"
             onClick={() => setIsSubmitted(false)} // Reset form for next day
           >
             Plan for Next Day
@@ -201,6 +203,7 @@ const MealForm = () => {
         </div>
       )}
     </div>
+    </>
   );
 };
 
