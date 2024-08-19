@@ -26,5 +26,8 @@ const MealPlanSchema = new mongoose.Schema({
   }
 });
 
+// Create a compound index to ensure (user, day) is unique
+MealPlanSchema.index({ day:1, user:1 }, { unique: true });
+
 const MealPlan = mongoose.model('MealPlan', MealPlanSchema);
 module.exports = MealPlan;

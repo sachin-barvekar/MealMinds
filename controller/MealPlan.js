@@ -5,10 +5,18 @@ exports.createMealPlan = async (req, res) => {
         const userId = req.user.id;
         const { day, meals } = req.body;
 
+        // Ensure all meal types are provided
         if (!meals || !meals.breakfast || !meals.lunch || !meals.dinner) {
             return res.status(400).json({ success: false, message: 'All meal types (breakfast, lunch, dinner) are required' });
         }
 
+        // Check if a meal plan already exists for this user and day
+        const existingMealPlan = await MealPlanModel.findOne({ day, user: userId });
+        if (existingMealPlan) {
+            return res.status(400).json({ success: false, message: 'A meal plan for this day already exists.' });
+        }
+
+        // Create and save new meal plan
         const newMealPlan = new MealPlanModel({
             day,
             meals: {

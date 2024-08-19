@@ -187,6 +187,9 @@ const MealForm = () => {
           <button type="submit" className="btn btn-success w-100">
             Submit
           </button>
+          <p  className="mt-2  text-danger">
+          Note: To add a new meal plan, please delete the existing ones.
+        </p>
         </form>
       ) : (
         <div className="text-center">

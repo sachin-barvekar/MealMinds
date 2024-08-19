@@ -17,9 +17,9 @@ export default function HeroSection({ title, showSearch, onSearchChange, onClick
         try {
             const confirmDelete = window.confirm("Are you sure you want to delete your meal plan?");
             if (confirmDelete) {
-                await axios.delete(`/api/v1/meal-plan/delete`); // Adjust the endpoint accordingly
+                await axios.delete(`/api/v1/meal-plan/delete`);
                 alert('Meal plan deleted successfully!');
-                navigate('/'); // Redirect to homepage or any other page after deletion
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error deleting meal plan:", error);
