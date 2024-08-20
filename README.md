@@ -1,7 +1,7 @@
 # MealMinds
 Welcome to **MealMinds** – your ultimate solution for personalized meal planning and nutritional information! Whether you're a seasoned health enthusiast or just starting your journey, MealMinds is here to support you in making healthier food choices and managing your diet efficiently.
 
-# Project Link: https://mealminds.onrender.com/meal-search
+# Project Link: https://mealminds.onrender.com/
 
 ## Table of Contents
 - [Introduction](#introduction)
