@@ -15,11 +15,8 @@ MealMinds is a comprehensive platform designed to help you plan your meals, trac
 
 ## Features
 - **User Registration and Login**: Create an account and securely log in to access your personalized dashboard.
-- **Personalized Dashboard**: Track your meals, monitor nutritional intake, and manage your health goals.
 - **Meal Planning**: Easily plan and manage your meals according to your dietary needs and preferences.
 - **Nutritional Information**: Access detailed nutritional data for various meals, including calories, protein, fat, and carbohydrates.
-- **Data Security**: Your information is protected with high security standards, ensuring peace of mind.
-- **Customizable Diet Options**: Supports various dietary preferences including vegan, keto, and balanced meals.
 
 ## Installation
 To get started with MealMinds, follow these steps:
@@ -39,7 +36,7 @@ SECRET_KEY=your_secret_key
 
 # Run the Application
 Start the development server:
-npm start
+npm run dev
 
 # Usage
 Register an Account
